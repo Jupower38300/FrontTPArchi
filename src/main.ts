@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 const CHANNEL = "message";
 
 function connectWs(ip: string) {
-	const socket= io(`http://'${ip}:3000`);
+	const socket= io(`http://${ip}:3000`);
 	socket.on("connect", () => {
 		console.log("Connected to server");
 	});
@@ -24,8 +24,14 @@ function displayMessage(message: string) {
 }
 
 window.addEventListener("load", async() => {
-	const call = await fetch('api/whoami');
+	const call = await fetch('http://localhost:3000/api/whoami');
+	try {
 	const json = await call.json();
 	displayWhoami(json.ip);
 	connectWs(json.ip);
+	} catch (e) {
+		console.error("Error parsing JSON:", e);
+		return;
+	}
+
 });
