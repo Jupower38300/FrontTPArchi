@@ -3,5 +3,6 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   build: {
 	minify: false,
+  host: true,
 }
 })
