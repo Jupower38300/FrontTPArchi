@@ -3,20 +3,11 @@ import { io } from "socket.io-client";
 
 const CHANNEL = "message";
 
-function connectWs(ip: string) {
-  const socket = io(`http://${ip}:3000`);
+function connectWs() {
+  const socket = io(`http://${window.location.hostname}:4000`);
 
-  socket.on("connect", () => {
-    console.log("✅ WebSocket connecté");
-  });
-
-  socket.on(CHANNEL, (msg) => {
-    displayMessage(msg);
-  });
-}
-
-function displayWhoami(serverIP: string) {
-  document.getElementById("whoami")!.textContent = serverIP;
+  socket.on("connect", () => console.log("✅ WebSocket connecté"));
+  socket.on(CHANNEL, (msg) => displayMessage(msg));
 }
 
 function displayMessage(message: string) {
@@ -37,11 +28,7 @@ async function sendMessage() {
   input.value = "";
 }
 
-window.addEventListener("load", async () => {
-  const call = await fetch('http://localhost:3000/api/whoami');
-  const json = await call.json();
-  displayWhoami(json.ip[0]);
-  connectWs(json.ip[0]);
-
+window.addEventListener("load", () => {
+  connectWs();
   document.getElementById("sendBtn")!.addEventListener("click", sendMessage);
 });
